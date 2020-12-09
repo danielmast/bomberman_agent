@@ -4,6 +4,8 @@ from serpent.sprite_locator import SpriteLocator
 import random
 from time import sleep
 
+TILE_SIZE = 34.4
+
 class SerpentBombermanGameAgent(GameAgent):
 
     def __init__(self, **kwargs):
@@ -25,6 +27,7 @@ class SerpentBombermanGameAgent(GameAgent):
             return
 
         game_state = self.get_game_state(game_frame)
+        print('Game state:', game_state)
 
         action = random.randint(0, 5)
         if action == 0:
@@ -39,23 +42,56 @@ class SerpentBombermanGameAgent(GameAgent):
             self.input_controller.tap_key(KeyboardKey.KEY_SPACE)
 
     def get_game_state(self, game_frame):
-        player_1_location = self.get_player_location('SPRITE_PLAYER_1', game_frame)
-        print('Location player 1: ', player_1_location)
-        player_2_location = self.get_player_location('SPRITE_PLAYER_2', game_frame)
-        print('Location player 2: ', player_2_location)
+        game_state = {}
+        game_state['players'] = self.get_players(game_frame)
+        game_state['barrels'] = self.get_barrels(game_frame)
 
         # todo
 
-        return None
+        return game_state
+
+    def get_players(self, game_frame):
+        p1_location = self.get_player_location('SPRITE_PLAYER_1', game_frame)
+        p2_location = self.get_player_location('SPRITE_PLAYER_2', game_frame)
+        return [
+            {"x": p1_location[0], "y": p1_location[1], "human": True},
+            {"x": p2_location[0], "y": p2_location[1], "human": False}
+        ]
 
     def get_player_location(self, sprite_label, game_frame):
         region = SpriteLocator().locate(sprite=self.game.sprites[sprite_label], game_frame=game_frame)
         if region is None:
             return None
         # (295, 220) is the coords location of a player's sprite at (0, 0)
-        x = round((region[1] - 295) / 34.4)
-        y = round((region[0] - 220) / 34.4)
+        x = round((region[1] - 295) / TILE_SIZE)
+        y = round((region[0] - 220) / TILE_SIZE)
         return (x, y)
+
+
+    def get_barrels(self, game_frame):
+        barrels = []
+
+        playing_field_region = self.game.screen_regions['PLAYING_FIELD']
+
+        for x in range(1, 14):
+            for y in range(1, 13):
+                tile_region_top_y = round(playing_field_region[0] + y * TILE_SIZE)
+                tile_region_left_x = round(playing_field_region[1] + x * TILE_SIZE)
+                tile_region = (
+                    tile_region_top_y,
+                    tile_region_left_x,
+                    tile_region_top_y + round(TILE_SIZE),
+                    tile_region_left_x + round(TILE_SIZE)
+                )
+
+                barrel_location = SpriteLocator().locate(sprite=self.game.sprites['SPRITE_BARREL_CUT2'],
+                                                         game_frame=game_frame,
+                                                         screen_region=tile_region)
+
+                if barrel_location is not None:
+                    barrels.append({"x": x, "y": y})
+
+        return barrels
 
     def handle_menu(self, current_screen):
         if current_screen == 'SPLASH':
