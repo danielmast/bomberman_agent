@@ -16,10 +16,23 @@ class SerpentBombermanGameAgent(GameAgent):
         pass
 
     def handle_play(self, game_frame):
-        self.click_through_menu(game_frame)
+        if self.get_current_screen(game_frame) == 'SPLASH':
+            self.click_through_menu()
+        else:
+            self.input_controller.tap_key(KeyboardKey.KEY_RIGHT)
+            self.input_controller.tap_key(KeyboardKey.KEY_LEFT)
+
+    def get_current_screen(self, game_frame):
+        sprite_locator = SpriteLocator()
+        play_button = self.game.sprites['SPRITE_SPLASH_SCREEN_PLAY_BUTTON']
+
+        if (sprite_locator.locate(sprite=play_button, game_frame=game_frame) is not None):
+            return "SPLASH"
+        else:
+            return None
 
 
-    def click_through_menu(self, game_frame):
+    def click_through_menu(self):
         self.game.api.Menu.click_play_button()
         self.game.api.Menu.click_1_player_button()
         self.game.api.Menu.click_1_opponent_button()
