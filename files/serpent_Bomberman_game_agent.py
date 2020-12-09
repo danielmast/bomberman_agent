@@ -39,15 +39,20 @@ class SerpentBombermanGameAgent(GameAgent):
             self.input_controller.tap_key(KeyboardKey.KEY_SPACE)
 
     def get_game_state(self, game_frame):
-        player_1_location = self.get_player_1_location(game_frame)
+        player_1_location = self.get_player_location('SPRITE_PLAYER_1', game_frame)
         print('Location player 1: ', player_1_location)
+        player_2_location = self.get_player_location('SPRITE_PLAYER_2', game_frame)
+        print('Location player 2: ', player_2_location)
 
         # todo
 
         return None
 
-    def get_player_1_location(self, game_frame):
-        region = SpriteLocator().locate(sprite=self.game.sprites['SPRITE_PLAYER_1'], game_frame=game_frame)
+    def get_player_location(self, sprite_label, game_frame):
+        region = SpriteLocator().locate(sprite=self.game.sprites[sprite_label], game_frame=game_frame)
+        if region is None:
+            return None
+        # (295, 220) is the coords location of a player's sprite at (0, 0)
         x = round((region[1] - 295) / 34.4)
         y = round((region[0] - 220) / 34.4)
         return (x, y)
