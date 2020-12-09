@@ -3,6 +3,7 @@ from serpent.input_controller import KeyboardKey
 from serpent.input_controller import MouseButton
 from serpent.sprite_locator import SpriteLocator
 import random
+from time import sleep
 
 class SerpentBombermanGameAgent(GameAgent):
 
@@ -21,14 +22,18 @@ class SerpentBombermanGameAgent(GameAgent):
         print ('current_screen = ', current_screen)
         if current_screen == 'SPLASH':
             self.game.api.Menu.click_play_button()
+            sleep(0.5)
         elif current_screen == 'PLAYER_MENU':
             self.game.api.Menu.click_1_player_button()
             self.game.api.Menu.click_1_opponent_button()
             self.game.api.Menu.click_level_1_button()
+            sleep(0.5)
         elif current_screen == 'END OF ROUND':
             self.game.api.Menu.click_play_now_button()
+            sleep(0.5)
         elif current_screen == 'END OF GAME':
             self.game.api.Menu.click_play_again_button()
+            sleep(0.5)
         else:
             action = random.randint(0, 5)
             if action == 0:
@@ -44,11 +49,11 @@ class SerpentBombermanGameAgent(GameAgent):
 
 
     def get_current_screen(self, game_frame):
-        if self.is_located(self.game.sprites['SPRITE_SPLASH_SCREEN_PLAY_BUTTON'], game_frame):
+        if self.is_located(self.game.sprites['SPRITE_SPLASH_SCREEN_AVATAR_BELLY'], game_frame):
             return "SPLASH"
         elif self.is_located(self.game.sprites['SPRITE_PLAYER_MENU_1_PLAYER_BUTTON'], game_frame):
             return "PLAYER_MENU"
-        elif self.is_located(self.game.sprites['SPRITE_END_OF_ROUND_PLAY_NOW_BUTTON'], game_frame):
+        elif self.is_located(self.game.sprites['SPRITE_END_OF_ROUND_GAME_LABEL'], game_frame):
             return "END OF ROUND"
         elif self.is_located(self.game.sprites['SPRITE_END_OF_GAME_PLAY_AGAIN_BUTTON'], game_frame):
             return "END OF GAME"
