@@ -12,8 +12,6 @@ class SerpentBombermanGameAgent(GameAgent):
 
         self.frame_handler_setups["PLAY"] = self.setup_play
 
-        self.frame_counter = 0
-
     def setup_play(self):
         pass
 
