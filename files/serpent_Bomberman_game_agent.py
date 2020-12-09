@@ -84,7 +84,7 @@ class SerpentBombermanGameAgent(GameAgent):
                     tile_region_left_x + round(TILE_SIZE)
                 )
 
-                barrel_location = SpriteLocator().locate(sprite=self.game.sprites['SPRITE_BARREL_CUT2'],
+                barrel_location = SpriteLocator().locate(sprite=self.game.sprites['SPRITE_BARREL'],
                                                          game_frame=game_frame,
                                                          screen_region=tile_region)
 
