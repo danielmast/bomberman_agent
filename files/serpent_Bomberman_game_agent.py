@@ -1,6 +1,5 @@
 from serpent.game_agent import GameAgent
 from serpent.input_controller import KeyboardKey
-from serpent.input_controller import MouseButton
 from serpent.sprite_locator import SpriteLocator
 import random
 from time import sleep
@@ -25,6 +24,8 @@ class SerpentBombermanGameAgent(GameAgent):
             self.handle_menu(current_screen)
             return
 
+        game_state = self.get_game_state(game_frame)
+
         action = random.randint(0, 5)
         if action == 0:
             self.input_controller.tap_key(KeyboardKey.KEY_LEFT)
@@ -36,6 +37,20 @@ class SerpentBombermanGameAgent(GameAgent):
             self.input_controller.tap_key(KeyboardKey.KEY_DOWN)
         elif action == 4:
             self.input_controller.tap_key(KeyboardKey.KEY_SPACE)
+
+    def get_game_state(self, game_frame):
+        player_1_location = self.get_player_1_location(game_frame)
+        print('Location player 1: ', player_1_location)
+
+        # todo
+
+        return None
+
+    def get_player_1_location(self, game_frame):
+        region = SpriteLocator().locate(sprite=self.game.sprites['SPRITE_PLAYER_1'], game_frame=game_frame)
+        x = round((region[1] - 295) / 34.4)
+        y = round((region[0] - 220) / 34.4)
+        return (x, y)
 
     def handle_menu(self, current_screen):
         if current_screen == 'SPLASH':
