@@ -27,7 +27,7 @@ class SerpentBombermanGameAgent(GameAgent):
             return
 
         game_state = self.get_game_state(game_frame)
-        print('Powerups:', game_state['powerups'])
+        print('Explosions:', game_state['explosions'])
 
         manual_play = True
 
@@ -49,10 +49,11 @@ class SerpentBombermanGameAgent(GameAgent):
     def get_game_state(self, game_frame):
         game_state = {}
         game_state['players'] = self.get_players(game_frame)
-        barrels, bombs, powerups = self.scan_tiles(game_frame)
+        barrels, bombs, powerups, explosions = self.scan_tiles(game_frame)
         game_state['barrels'] = barrels
         game_state['bombs'] = bombs
         game_state['powerups'] = powerups
+        game_state['explosions'] = explosions
 
         # todo
 
@@ -85,6 +86,7 @@ class SerpentBombermanGameAgent(GameAgent):
         barrels = []
         bombs = []
         powerups = []
+        explosions = []
 
         playing_field_region = self.game.screen_regions['PLAYING_FIELD']
 
@@ -131,7 +133,11 @@ class SerpentBombermanGameAgent(GameAgent):
                     powerups.append({"x": x, "y": y, "type": "goldentrainers"})
                     continue
 
-        return barrels, bombs, powerups
+                if self.is_located('SPRITE_PLAYER_1_EXPLOSION', game_frame, tile_region):
+                    explosions.append({"x": x, "y": y, "human": True})
+                    continue
+
+        return barrels, bombs, powerups, explosions
 
 
     def handle_menu(self, current_screen):
