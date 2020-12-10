@@ -100,7 +100,7 @@ class SerpentBombermanGameAgent(GameAgent):
                     barrels.append({"x": x, "y": y})
                     continue
 
-                player_1_bomb_location = SpriteLocator().locate(sprite=self.game.sprites['SPRITE_PLAYER_1_BOMB2'],
+                player_1_bomb_location = SpriteLocator().locate(sprite=self.game.sprites['SPRITE_PLAYER_1_BOMB'],
                                                          game_frame=game_frame,
                                                          screen_region=tile_region)
 
