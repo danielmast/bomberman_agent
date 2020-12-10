@@ -44,19 +44,26 @@ class SerpentBombermanGameAgent(GameAgent):
     def get_game_state(self, game_frame):
         game_state = {}
         game_state['players'] = self.get_players(game_frame)
-        game_state['barrels'] = self.get_barrels(game_frame)
+        barrels, bombs = self.scan_tiles(game_frame)
+        game_state['barrels'] = barrels
+        game_state['bombs'] = bombs
 
         # todo
 
         return game_state
 
     def get_players(self, game_frame):
+        players = []
+
         p1_location = self.get_player_location('SPRITE_PLAYER_1', game_frame)
+        if p1_location is not None:
+            players.append({"x": p1_location[0], "y": p1_location[1], "human": True})
+
         p2_location = self.get_player_location('SPRITE_PLAYER_2', game_frame)
-        return [
-            {"x": p1_location[0], "y": p1_location[1], "human": True},
-            {"x": p2_location[0], "y": p2_location[1], "human": False}
-        ]
+        if p2_location is not None:
+            players.append({"x": p2_location[0], "y": p2_location[1], "human": False})
+
+        return players
 
     def get_player_location(self, sprite_label, game_frame):
         region = SpriteLocator().locate(sprite=self.game.sprites[sprite_label], game_frame=game_frame)
@@ -68,8 +75,9 @@ class SerpentBombermanGameAgent(GameAgent):
         return (x, y)
 
 
-    def get_barrels(self, game_frame):
+    def scan_tiles(self, game_frame):
         barrels = []
+        bombs = []
 
         playing_field_region = self.game.screen_regions['PLAYING_FIELD']
 
@@ -90,8 +98,18 @@ class SerpentBombermanGameAgent(GameAgent):
 
                 if barrel_location is not None:
                     barrels.append({"x": x, "y": y})
+                    continue
 
-        return barrels
+                player_1_bomb_location = SpriteLocator().locate(sprite=self.game.sprites['SPRITE_PLAYER_1_BOMB2'],
+                                                         game_frame=game_frame,
+                                                         screen_region=tile_region)
+
+                if player_1_bomb_location is not None:
+                    bombs.append({"x": x, "y": y})
+                    continue
+
+        return barrels, bombs
+
 
     def handle_menu(self, current_screen):
         if current_screen == 'SPLASH':
