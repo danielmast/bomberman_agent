@@ -27,7 +27,7 @@ class SerpentBombermanGameAgent(GameAgent):
             return
 
         game_state = self.get_game_state(game_frame)
-        print('Explosions:', game_state['explosions'])
+        print('Num Explosions:', len(game_state['explosions']))
 
         manual_play = True
 
@@ -135,6 +135,10 @@ class SerpentBombermanGameAgent(GameAgent):
 
                 if self.is_located('SPRITE_PLAYER_1_EXPLOSION', game_frame, tile_region):
                     explosions.append({"x": x, "y": y, "human": True})
+                    continue
+
+                if self.is_located('SPRITE_PLAYER_2_EXPLOSION', game_frame, tile_region):
+                    explosions.append({"x": x, "y": y, "human": False})
                     continue
 
         return barrels, bombs, powerups, explosions
