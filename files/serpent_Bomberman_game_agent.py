@@ -44,9 +44,10 @@ class SerpentBombermanGameAgent(GameAgent):
     def get_game_state(self, game_frame):
         game_state = {}
         game_state['players'] = self.get_players(game_frame)
-        barrels, bombs = self.scan_tiles(game_frame)
+        barrels, bombs, powerups = self.scan_tiles(game_frame)
         game_state['barrels'] = barrels
         game_state['bombs'] = bombs
+        game_state['powerups'] = powerups
 
         # todo
 
@@ -78,6 +79,7 @@ class SerpentBombermanGameAgent(GameAgent):
     def scan_tiles(self, game_frame):
         barrels = []
         bombs = []
+        powerups = []
 
         playing_field_region = self.game.screen_regions['PLAYING_FIELD']
 
@@ -104,7 +106,11 @@ class SerpentBombermanGameAgent(GameAgent):
                     bombs.append({"x": x, "y": y, "human": False})
                     continue
 
-        return barrels, bombs
+                if self.is_located('SPRITE_POWERUP_LIGHTNING', game_frame, tile_region):
+                    powerups.append({"x": x, "y": y, "type": "lightning"})
+                    continue
+
+        return barrels, bombs, powerups
 
 
     def handle_menu(self, current_screen):
