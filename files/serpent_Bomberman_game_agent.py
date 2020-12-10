@@ -27,7 +27,12 @@ class SerpentBombermanGameAgent(GameAgent):
             return
 
         game_state = self.get_game_state(game_frame)
-        print('Game state:', game_state)
+        # print('Game state:', game_state)
+
+        manual_play = True
+
+        if manual_play:
+            return
 
         action = random.randint(0, 5)
         if action == 0:
@@ -104,6 +109,10 @@ class SerpentBombermanGameAgent(GameAgent):
 
                 if self.is_located('SPRITE_PLAYER_2_BOMB', game_frame, tile_region):
                     bombs.append({"x": x, "y": y, "human": False})
+                    continue
+
+                if self.is_located('SPRITE_POWERUP_BOMB', game_frame, tile_region):
+                    powerups.append({"x": x, "y": y, "type": "bomb"})
                     continue
 
                 if self.is_located('SPRITE_POWERUP_LIGHTNING', game_frame, tile_region):
