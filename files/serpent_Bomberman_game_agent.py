@@ -92,27 +92,15 @@ class SerpentBombermanGameAgent(GameAgent):
                     tile_region_left_x + round(TILE_SIZE)
                 )
 
-                barrel_location = SpriteLocator().locate(sprite=self.game.sprites['SPRITE_BARREL'],
-                                                         game_frame=game_frame,
-                                                         screen_region=tile_region)
-
-                if barrel_location is not None:
+                if self.is_located('SPRITE_BARREL', game_frame, tile_region):
                     barrels.append({"x": x, "y": y})
                     continue
 
-                player_1_bomb_location = SpriteLocator().locate(sprite=self.game.sprites['SPRITE_PLAYER_1_BOMB'],
-                                                         game_frame=game_frame,
-                                                         screen_region=tile_region)
-
-                if player_1_bomb_location is not None:
+                if self.is_located('SPRITE_PLAYER_1_BOMB', game_frame, tile_region):
                     bombs.append({"x": x, "y": y, "human": True})
                     continue
 
-                player_2_bomb_location = SpriteLocator().locate(sprite=self.game.sprites['SPRITE_PLAYER_2_BOMB'],
-                                                                game_frame=game_frame,
-                                                                screen_region=tile_region)
-
-                if player_2_bomb_location is not None:
+                if self.is_located('SPRITE_PLAYER_2_BOMB', game_frame, tile_region):
                     bombs.append({"x": x, "y": y, "human": False})
                     continue
 
@@ -137,21 +125,23 @@ class SerpentBombermanGameAgent(GameAgent):
 
 
     def get_current_screen(self, game_frame):
-        if self.is_located(self.game.sprites['SPRITE_GAMEPLAY_WALL'], game_frame):
+        if self.is_located('SPRITE_GAMEPLAY_WALL', game_frame):
             return "GAMEPLAY"
-        elif self.is_located(self.game.sprites['SPRITE_SPLASH_SCREEN_AVATAR_BELLY'], game_frame):
+        elif self.is_located('SPRITE_SPLASH_SCREEN_AVATAR_BELLY', game_frame):
             return "SPLASH"
-        elif self.is_located(self.game.sprites['SPRITE_PLAYER_MENU_1_PLAYER_BUTTON'], game_frame):
+        elif self.is_located('SPRITE_PLAYER_MENU_1_PLAYER_BUTTON', game_frame):
             return "PLAYER_MENU"
-        elif self.is_located(self.game.sprites['SPRITE_END_OF_ROUND_GAME_LABEL'], game_frame):
+        elif self.is_located('SPRITE_END_OF_ROUND_GAME_LABEL', game_frame):
             return "END OF ROUND"
-        elif self.is_located(self.game.sprites['SPRITE_END_OF_GAME_PLAY_AGAIN_BUTTON'], game_frame):
+        elif self.is_located('SPRITE_END_OF_GAME_PLAY_AGAIN_BUTTON', game_frame):
             return "END OF GAME"
         else:
             return None
 
-    def is_located(self, sprite, game_frame):
-        return SpriteLocator().locate(sprite=sprite, game_frame=game_frame) is not None
+    def is_located(self, sprite_label, game_frame, screen_region=None):
+        return SpriteLocator().locate(sprite=self.game.sprites[sprite_label],
+                                      game_frame=game_frame,
+                                      screen_region=screen_region) is not None
 
     def click_through_menu(self):
         self.game.api.Menu.click_play_button()
