@@ -3,6 +3,7 @@ from serpent.input_controller import KeyboardKey
 from serpent.sprite_locator import SpriteLocator
 import random
 from time import sleep
+from datetime import datetime
 
 TILE_SIZE = 34.4
 
@@ -26,8 +27,11 @@ class SerpentBombermanGameAgent(GameAgent):
             self.handle_menu(current_screen)
             return
 
+
+        start = datetime.now()
         game_state = self.get_game_state(game_frame)
-        print('Num walls:', len(game_state['walls']))
+        end = datetime.now()
+        print ('get_game_state time:', (end-start))
 
         manual_play = True
 
