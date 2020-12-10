@@ -105,7 +105,15 @@ class SerpentBombermanGameAgent(GameAgent):
                                                          screen_region=tile_region)
 
                 if player_1_bomb_location is not None:
-                    bombs.append({"x": x, "y": y})
+                    bombs.append({"x": x, "y": y, "human": True})
+                    continue
+
+                player_2_bomb_location = SpriteLocator().locate(sprite=self.game.sprites['SPRITE_PLAYER_2_BOMB'],
+                                                                game_frame=game_frame,
+                                                                screen_region=tile_region)
+
+                if player_2_bomb_location is not None:
+                    bombs.append({"x": x, "y": y, "human": False})
                     continue
 
         return barrels, bombs
