@@ -27,7 +27,7 @@ class SerpentBombermanGameAgent(GameAgent):
             return
 
         game_state = self.get_game_state(game_frame)
-        print('Num Explosions:', len(game_state['explosions']))
+        print('Num walls:', len(game_state['walls']))
 
         manual_play = True
 
@@ -49,11 +49,12 @@ class SerpentBombermanGameAgent(GameAgent):
     def get_game_state(self, game_frame):
         game_state = {}
         game_state['players'] = self.get_players(game_frame)
-        barrels, bombs, powerups, explosions = self.scan_tiles(game_frame)
+        barrels, bombs, powerups, explosions, walls = self.scan_tiles(game_frame)
         game_state['barrels'] = barrels
         game_state['bombs'] = bombs
         game_state['powerups'] = powerups
         game_state['explosions'] = explosions
+        game_state['walls'] = walls
 
         # todo
 
@@ -87,11 +88,12 @@ class SerpentBombermanGameAgent(GameAgent):
         bombs = []
         powerups = []
         explosions = []
+        walls = []
 
         playing_field_region = self.game.screen_regions['PLAYING_FIELD']
 
-        for x in range(1, 14):
-            for y in range(1, 13):
+        for x in range(0, 15):
+            for y in range(0, 13):
                 tile_region_top_y = round(playing_field_region[0] + y * TILE_SIZE)
                 tile_region_left_x = round(playing_field_region[1] + x * TILE_SIZE)
                 tile_region = (
@@ -141,7 +143,11 @@ class SerpentBombermanGameAgent(GameAgent):
                     explosions.append({"x": x, "y": y, "human": False})
                     continue
 
-        return barrels, bombs, powerups, explosions
+                if self.is_located('SPRITE_WALL', game_frame, tile_region):
+                    walls.append({"x": x, "y": y})
+                    continue
+
+        return barrels, bombs, powerups, explosions, walls
 
 
     def handle_menu(self, current_screen):
