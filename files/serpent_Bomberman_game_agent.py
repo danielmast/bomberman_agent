@@ -20,14 +20,14 @@ class SerpentBombermanGameAgent(GameAgent):
 
     def handle_play(self, game_frame):
         current_screen = self.get_current_screen(game_frame)
-        print ('current_screen = ', current_screen)
+        # print ('current_screen = ', current_screen)
 
         if current_screen != 'GAMEPLAY':
             self.handle_menu(current_screen)
             return
 
         game_state = self.get_game_state(game_frame)
-        # print('Game state:', game_state)
+        print('Powerups:', game_state['powerups'])
 
         manual_play = True
 
@@ -117,6 +117,10 @@ class SerpentBombermanGameAgent(GameAgent):
 
                 if self.is_located('SPRITE_POWERUP_LIGHTNING', game_frame, tile_region):
                     powerups.append({"x": x, "y": y, "type": "lightning"})
+                    continue
+
+                if self.is_located('SPRITE_POWERUP_FASTHANDS', game_frame, tile_region):
+                    powerups.append({"x": x, "y": y, "type": "fasthands"})
                     continue
 
         return barrels, bombs, powerups
