@@ -123,6 +123,14 @@ class SerpentBombermanGameAgent(GameAgent):
                     powerups.append({"x": x, "y": y, "type": "fasthands"})
                     continue
 
+                if self.is_located('SPRITE_POWERUP_GOLDENKICK', game_frame, tile_region):
+                    powerups.append({"x": x, "y": y, "type": "goldenkick"})
+                    continue
+
+                if self.is_located('SPRITE_POWERUP_GOLDENTRAINERS', game_frame, tile_region):
+                    powerups.append({"x": x, "y": y, "type": "goldentrainers"})
+                    continue
+
         return barrels, bombs, powerups
 
 
