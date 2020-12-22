@@ -21,7 +21,7 @@ class SerpentBombermanGameAgent(GameAgent):
 
     def handle_play(self, game_frame):
         current_screen = self.get_current_screen(game_frame)
-        # print ('current_screen = ', current_screen)
+        print ('current_screen = ', current_screen)
 
         if current_screen != 'GAMEPLAY':
             self.handle_menu(current_screen)
@@ -31,9 +31,16 @@ class SerpentBombermanGameAgent(GameAgent):
         start = datetime.now()
         game_state = self.get_game_state(game_frame)
         end = datetime.now()
-        print ('get_game_state time:', (end-start))
+        # print ('get_game_state time:', (end-start))
+        player = next((p for p in game_state['players'] if p["human"]), None)
+        if player is not None:
+            print('Player position: (x=', player['x'], ', y=', player['y'], ')')
+        else:
+            print('Player position: None')
 
-        manual_play = True
+        print('Num barrels: ', len(game_state['barrels']))
+
+        manual_play = False
 
         if manual_play:
             return
@@ -139,17 +146,17 @@ class SerpentBombermanGameAgent(GameAgent):
                     powerups.append({"x": x, "y": y, "type": "goldentrainers"})
                     continue
 
-                if self.is_located('SPRITE_PLAYER_1_EXPLOSION', game_frame, tile_region):
-                    explosions.append({"x": x, "y": y, "human": True})
-                    continue
-
-                if self.is_located('SPRITE_PLAYER_2_EXPLOSION', game_frame, tile_region):
-                    explosions.append({"x": x, "y": y, "human": False})
-                    continue
-
-                if self.is_located('SPRITE_WALL', game_frame, tile_region):
-                    walls.append({"x": x, "y": y})
-                    continue
+                # if self.is_located('SPRITE_PLAYER_1_EXPLOSION', game_frame, tile_region):
+                #     explosions.append({"x": x, "y": y, "human": True})
+                #     continue
+                #
+                # if self.is_located('SPRITE_PLAYER_2_EXPLOSION', game_frame, tile_region):
+                #     explosions.append({"x": x, "y": y, "human": False})
+                #     continue
+                #
+                # if self.is_located('SPRITE_WALL', game_frame, tile_region):
+                #     walls.append({"x": x, "y": y})
+                #     continue
 
         return barrels, bombs, powerups, explosions, walls
 
